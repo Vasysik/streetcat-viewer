@@ -3,30 +3,39 @@ import random
 from time import sleep
 import urllib.request
 
-fresh_1 = ["f_1", "http://streetcatpull.hellobike.com/live/4258783365322591678_0.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_1.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_2.m3u8"]
-fresh_2 = ["f_2", "http://streetcatpull.hellobike.com/live/4412424173050749216_0.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_1.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_2.m3u8"]
-sleeps = ["sl", "http://streetcatpull.hellobike.com/live/4489918405732275808_0.m3u8", "http://streetcatpull.hellobike.com/live/4489918405732275808_1.m3u8", "http://streetcatpull.hellobike.com/live/4489918405732275808_2.m3u8"]
-snack = ["sn", "http://streetcatpull.hellobike.com/live/4291094747934800009_0.m3u8", "http://streetcatpull.hellobike.com/live/4291094747934800009_1.m3u8", "http://streetcatpull.hellobike.com/live/4291094747934800009_2.m3u8"]
-shock = ["sh", "http://streetcatpull.hellobike.com/live/4584985755015398729_0.m3u8", "http://streetcatpull.hellobike.com/live/4584985755015398729_1.m3u8", "http://streetcatpull.hellobike.com/live/4584985755015398729_2.m3u8"]
+fresh = ["fresh", "http://streetcatpull.hellobike.com/live/4258783365322591678_0.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_1.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_2.m3u8"]
+despair = ["despair", "http://streetcatpull.hellobike.com/live/4412424173050749216_0.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_1.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_2.m3u8"]
+sleeps = ["sleeps", "http://streetcatpull.hellobike.com/live/4489918405732275808_0.m3u8", "http://streetcatpull.hellobike.com/live/4489918405732275808_1.m3u8", "http://streetcatpull.hellobike.com/live/4489918405732275808_2.m3u8"]
+snack = ["snack", "http://streetcatpull.hellobike.com/live/4291094747934800009_0.m3u8", "http://streetcatpull.hellobike.com/live/4291094747934800009_1.m3u8", "http://streetcatpull.hellobike.com/live/4291094747934800009_2.m3u8"]
+shock = ["shock", "http://streetcatpull.hellobike.com/live/4584985755015398729_0.m3u8", "http://streetcatpull.hellobike.com/live/4584985755015398729_1.m3u8", "http://streetcatpull.hellobike.com/live/4584985755015398729_2.m3u8"]
+sonic = ["sonic", "http://streetcatpull.hellobike.com/live/4303090694701059290_0.m3u8", "http://streetcatpull.hellobike.com/live/4303090694701059290_1.m3u8", "http://streetcatpull.hellobike.com/live/4303090694701059290_2.m3u8"]
+ducks = ["ducks", "http://streetcatpull.hellobike.com/live/4300845904274638881_0.m3u8", "http://streetcatpull.hellobike.com/live/4300845904274638881_1.m3u8", "http://streetcatpull.hellobike.com/live/4300845904274638881_2.m3u8"]
 
-cams = [fresh_1, fresh_2, sleeps, snack, shock]
+cams = [fresh, despair, sleeps, snack, shock, sonic, ducks]
 cam_proc = None
 
-def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1):
+def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use_text = False, fontfile = ""):
     cam_url = ""
     response = ""
+    text = ""
     global cam_proc
     disabled = False
     for cam in cams:
         if str(cam_name) == str(cam[0]):
             cam_url = cam[int(cam_number)]
 
-    if cam_url == "": cam_url = random.choice(cams)[random.randrange(1,4)]
+    if cam_url == "": 
+        cam = random.choice(cams)
+        cam_name = cam[0]
+        cam_number = random.randrange(1,4)
+        cam_url = cam[cam_number]
+
+    if use_text: text = "-vf \"drawtext=fontfile=" + str(fontfile) + ":fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Name\: " + str(cam_name) + " Number\: " + str(cam_number) + "'\""
 
     try: urllib.request.urlopen(cam_url)
     except: 
         disabled = True
-        response = "Cam " + cam_name + " " + cam_number + " is disabled"
+        response = "Cam " + str(cam_name) + " " + str(cam_number) + " is disabled"
 
     if not disabled:
         if cam_proc:
@@ -34,6 +43,6 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1):
                 cam_proc.stdin.write('q'.encode('utf-8'))
                 cam_proc.stdin.flush()
             except: None
-        cam_proc = subprocess.Popen((command + " " + cam_url + " " + parameters), shell=True, stdin=subprocess.PIPE)
+        cam_proc = subprocess.Popen((command + " " + cam_url + " " + text + " " + parameters), shell=True, stdin=subprocess.PIPE)
 
     return [cam_proc, response]

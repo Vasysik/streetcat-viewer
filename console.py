@@ -1,11 +1,15 @@
 import streetcat_viewer
+import conf
 
 while(True):
     print("Cats Cams:")
-    print(" Mr Fresh: f_1 or f_2")
-    print(" Miss Sleeps: sl")
-    print(" Mr Snack: sn")
-    print(" Mr Shock: sh")
+    print(" Mr Fresh: fresh")
+    print(" Mr Despair: despair")
+    print(" Miss Sleeps: sleeps")
+    print(" Mr Snack: snack")
+    print(" Mr Shock: shock")
+    print(" Mr Sonic: sonic")
+    print(" Ducks: ducks")
     
     print("Enter camera name: ", end="")
     cam_name = input()
@@ -16,7 +20,9 @@ while(True):
         player = streetcat_viewer.play(command = "ffplay", 
                             parameters = "", 
                             cam_name = cam_name, 
-                            cam_number = cam_number)
+                            cam_number = cam_number,
+                            use_text = True,
+                            fontfile = conf.fontfile)
         player[0].wait()
         print(player[1])
     except: print("Player Error")
