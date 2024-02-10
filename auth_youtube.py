@@ -13,8 +13,5 @@ def Authorize(file):
         'https://www.googleapis.com/auth/youtube.force-ssl',
         'https://www.googleapis.com/auth/youtube.readonly',
     })
-    flow.run_local_server(
-        host='localhost',
-        port=5500,
-        authorization_prompt_message="")
+    flow.run_console()
     return flow

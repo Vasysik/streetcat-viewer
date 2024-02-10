@@ -41,7 +41,7 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use
             disabled = True
             response = f"Cam {str(cam_name)} {str(cam_number)} is disabled"
 
-    if use_text: text = f"-vf \"drawtext=fontfile={str(fontfile)}:fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Camera\: {str(cam_name)}-{str(cam_number)}'\""
+    if use_text: text = f"-vf \"drawtext=fontfile={str(fontfile)}:fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Camera\: {str(cam_name)} {str(cam_number)}'\""
 
     if not disabled:
         if cam_proc:
