@@ -16,26 +16,32 @@ cam_proc = None
 
 def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use_text = False, fontfile = ""):
     cam_url = ""
-    response = ""
+    response = f"Cam {cam_name} {cam_number} is turned on"
     text = ""
     global cam_proc
     disabled = False
-    for cam in cams:
-        if str(cam_name) == str(cam[0]):
-            cam_url = cam[int(cam_number)]
-
-    if cam_url == "": 
+    
+    if cam_name == "": 
         cam = random.choice(cams)
         cam_name = cam[0]
         cam_number = random.randrange(1,4)
+        response = f"Cam {cam_name} {cam_number} is turned on"
         cam_url = cam[cam_number]
+    else:
+        for cam in cams:
+            if str(cam_name) == str(cam[0]):
+                cam_url = cam[int(cam_number)]
+
+    if cam_url == "":
+        disabled == True
+        response = f"Cam {str(cam_name)} {str(cam_number)} does not exist"
+    else:
+        try: urllib.request.urlopen(cam_url)
+        except: 
+            disabled = True
+            response = f"Cam {str(cam_name)} {str(cam_number)} is disabled"
 
     if use_text: text = f"-vf \"drawtext=fontfile={str(fontfile)}:fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Camera\: {str(cam_name)}-{str(cam_number)}'\""
-
-    try: urllib.request.urlopen(cam_url)
-    except: 
-        disabled = True
-        response = f"Cam {str(cam_name)} {str(cam_number)} is disabled"
 
     if not disabled:
         if cam_proc:
