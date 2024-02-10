@@ -24,20 +24,22 @@ def checker():
 _thread.start_new_thread(checker, ())
 
 while chat.is_alive():
-    for c in chat.get().sync_items():
-        print(f"Chat | {c.author.name}: {c.message}")
-        if c.message.split()[0] == "!cam":
-            com, cam_name, cam_number = c.message.split()
-            player = streetcat_viewer.play(command = command, 
-                                parameters = parameters, 
-                                cam_name = cam_name, 
-                                cam_number = cam_number,
-                                use_text = True,
-                                fontfile = conf.fontfile)
-            print(player[1])
-        elif c.message.split()[0] == "!rand":
-            player = streetcat_viewer.play(command = command, 
-                                parameters = parameters,
-                                use_text = True,
-                                fontfile = conf.fontfile)
-            print(player[1])
+    try:
+        for c in chat.get().sync_items():
+            print(f"Chat | {c.author.name}: {c.message}")
+            if c.message.split()[0] == "!cam" and len(c.message.split()) == 3:
+                com, cam_name, cam_number = c.message.split()
+                player = streetcat_viewer.play(command = command, 
+                                    parameters = parameters, 
+                                    cam_name = cam_name, 
+                                    cam_number = cam_number,
+                                    use_text = True,
+                                    fontfile = conf.fontfile)
+                print(player[1])
+            elif c.message.split()[0] == "!rand":
+                player = streetcat_viewer.play(command = command, 
+                                    parameters = parameters,
+                                    use_text = True,
+                                    fontfile = conf.fontfile)
+                print(player[1])
+    except: print("Chat | ERROR")
