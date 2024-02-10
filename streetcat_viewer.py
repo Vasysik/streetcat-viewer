@@ -30,12 +30,12 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use
         cam_number = random.randrange(1,4)
         cam_url = cam[cam_number]
 
-    if use_text: text = "-vf \"drawtext=fontfile=" + str(fontfile) + ":fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Name\: " + str(cam_name) + " Number\: " + str(cam_number) + "'\""
+    if use_text: text = f"-vf \"drawtext=fontfile={str(fontfile)}:fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Camera\: {str(cam_name)}-{str(cam_number)}'\""
 
     try: urllib.request.urlopen(cam_url)
     except: 
         disabled = True
-        response = "Cam " + str(cam_name) + " " + str(cam_number) + " is disabled"
+        response = f"Cam {str(cam_name)} {str(cam_number)} is disabled"
 
     if not disabled:
         if cam_proc:
@@ -43,6 +43,6 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use
                 cam_proc.stdin.write('q'.encode('utf-8'))
                 cam_proc.stdin.flush()
             except: None
-        cam_proc = subprocess.Popen((command + " " + cam_url + " " + text + " " + parameters), shell=True, stdin=subprocess.PIPE)
+        cam_proc = subprocess.Popen(f"{command} {cam_url} {text} {parameters}", shell=True, stdin=subprocess.PIPE)
 
     return [cam_proc, response]

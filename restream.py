@@ -10,20 +10,23 @@ parameters = "-pix_fmt yuvj420p -x264-params keyint=48:min-keyint=48:scenecut=-1
 
 def checker():
     while True:
-        if streetcat_viewer.cam_proc is None or streetcat_viewer.cam_proc.poll() is not None:
-            print("Cams Rebooting...")
-            streetcat_viewer.play(command = command, 
-                                parameters = parameters,
-                                use_text = True,
-                                fontfile = conf.fontfile)
-        streetcat_viewer.cam_proc.wait()
+        try:
+            if streetcat_viewer.cam_proc is None or streetcat_viewer.cam_proc.poll() is not None:
+                print("Cams Rebooting...")
+                streetcat_viewer.play(command = command, 
+                                    parameters = parameters,
+                                    use_text = True,
+                                    fontfile = conf.fontfile)
+            streetcat_viewer.cam_proc.wait()
+        except: print("Cams Rebooting Error")
         sleep(5)
 
 _thread.start_new_thread(checker, ())
 
 while chat.is_alive():
     for c in chat.get().sync_items():
-        if c.message.split()[0] == "!camera":
+        print(f"Chat | {c.author.name}: {c.message}")
+        if c.message.split()[0] == "!cam":
             com, cam_name, cam_number = c.message.split()
             player = streetcat_viewer.play(command = command, 
                                 parameters = parameters, 
@@ -32,7 +35,7 @@ while chat.is_alive():
                                 use_text = True,
                                 fontfile = conf.fontfile)
             print(player[1])
-        elif c.message.split()[0] == "!random":
+        elif c.message.split()[0] == "!rand":
             player = streetcat_viewer.play(command = command, 
                                 parameters = parameters,
                                 use_text = True,
