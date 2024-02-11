@@ -31,7 +31,8 @@ def getLiveChatId(LIVE_STREAM_ID):
     return liveChatId
 
 stream_id = input("Enter the live stream ID: ")
-chat = pytchat.create(video_id=stream_id)
+chat = pytchat.create(video_id = stream_id, 
+                      logger = None)
 liveChatId = getLiveChatId(stream_id)
 
 def sendReplyToLiveChat(liveChatId, message):
@@ -64,30 +65,28 @@ def checker():
 
 _thread.start_new_thread(checker, ())
 
-while True:
+logging.info(f"{current_time()} | Chat listener launch...")
+while chat.is_alive():
     try:
-        logging.info(f"{current_time()} | Chat listener launch...")
-        while chat.is_alive():
-            try:
-                for c in chat.get().sync_items():
-                    print(f"Chat | {c.author.name}: {c.message}")
-                    logging.info(f"{current_time()} | Chat | {c.author.name}: {c.message}")
-                    if c.message.split()[0] == "!cam" and len(c.message.split()) == 3:
-                        com, cam_name, cam_number = c.message.split()
-                        player = streetcat_viewer.play(command = command, 
-                                            parameters = parameters, 
-                                            cam_name = cam_name, 
-                                            cam_number = cam_number,
-                                            use_text = True,
-                                            fontfile = conf.fontfile)
-                        sendReplyToLiveChat(liveChatId, player[1])
-                    elif c.message.split()[0] == "!rand":
-                        player = streetcat_viewer.play(command = command, 
-                                            parameters = parameters,
-                                            use_text = True,
-                                            fontfile = conf.fontfile)
-                        sendReplyToLiveChat(liveChatId, player[1])
-            except:
-                logging.error(f"{current_time()} | Chat | ERROR") 
-                print("Chat | ERROR")
-    except: logging.error(f"{current_time()} | Chat is not alive!!!")
+        for c in chat.get().sync_items():
+            print(f"Chat | {c.author.name}: {c.message}")
+            logging.info(f"{current_time()} | Chat | {c.author.name}: {c.message}")
+            if c.message.split()[0] == "!cam" and len(c.message.split()) == 3:
+                com, cam_name, cam_number = c.message.split()
+                player = streetcat_viewer.play(command = command, 
+                                    parameters = parameters, 
+                                    cam_name = cam_name, 
+                                    cam_number = cam_number,
+                                    use_text = True,
+                                    fontfile = conf.fontfile)
+                sendReplyToLiveChat(liveChatId, player[1])
+            elif c.message.split()[0] == "!rand":
+                player = streetcat_viewer.play(command = command, 
+                                    parameters = parameters,
+                                    use_text = True,
+                                    fontfile = conf.fontfile)
+                sendReplyToLiveChat(liveChatId, player[1])
+    except:
+        logging.error(f"{current_time()} | Chat | ERROR") 
+        print("Chat | ERROR")
+logging.error(f"{current_time()} | Chat is not alive!!!")
