@@ -7,6 +7,7 @@ services:
     container_name: streetcat_restream
     stdin_open: true
     tty: true
+    command: /bin/bash
     # volumes:
     #   - ./conf.py:./:ro
     #   - ./client.json:./:ro
