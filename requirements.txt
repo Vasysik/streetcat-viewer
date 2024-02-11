@@ -1,0 +1,2 @@
+pytchat==0.5.5
+google-api-python-client==1.7.2
