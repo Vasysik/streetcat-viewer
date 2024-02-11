@@ -1,7 +1,8 @@
 import subprocess
 import random
-from time import sleep
+import time
 import urllib.request
+import logging
 
 fresh = ["fresh", "http://streetcatpull.hellobike.com/live/4258783365322591678_0.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_1.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_2.m3u8"]
 despair = ["despair", "http://streetcatpull.hellobike.com/live/4412424173050749216_0.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_1.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_2.m3u8"]
@@ -14,7 +15,11 @@ ducks = ["ducks", "http://streetcatpull.hellobike.com/live/4300845904274638881_0
 cams = [fresh, despair, sleeps, snack, shock, sonic, ducks]
 cam_proc = None
 
+def current_time():
+    return time.strftime("%H:%M:%S", time.localtime())
+
 def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use_text = False, fontfile = ""):
+    logging.info(f"{current_time()} | Play {command} {parameters} {cam_name} {cam_number} {use_text} {fontfile}")
     cam_url = ""
     response = f"Cam {cam_name} {cam_number} is turned on"
     text = ""
@@ -27,28 +32,37 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use
         cam_number = random.randrange(1,4)
         response = f"Cam {cam_name} {cam_number} is turned on"
         cam_url = cam[cam_number]
+        logging.info(f"{current_time()} | Rand {response} url: {cam_url}")
     else:
         for cam in cams:
             if str(cam_name) == str(cam[0]):
                 cam_url = cam[int(cam_number)]
+                logging.info(f"{current_time()} | {response} url: {cam_url}")
 
     if cam_url == "":
         disabled == True
         response = f"Cam {str(cam_name)} {str(cam_number)} does not exist"
+        logging.error(f"{current_time()} | {response}")
     else:
         try: urllib.request.urlopen(cam_url)
         except: 
             disabled = True
             response = f"Cam {str(cam_name)} {str(cam_number)} is disabled"
+            logging.error(f"{current_time()} | {response} url: {cam_url}")
 
     if use_text: text = f"-vf \"drawtext=fontfile={str(fontfile)}:fontsize=18:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=5:y=5:text='Camera\: {str(cam_name)} {str(cam_number)}'\""
 
     if not disabled:
         if cam_proc:
             try:
+                logging.info(f"{current_time()} | FFMPEG killing...")
                 cam_proc.stdin.write('q'.encode('utf-8'))
                 cam_proc.stdin.flush()
-            except: None
-        cam_proc = subprocess.Popen(f"{command} {cam_url} {text} {parameters}", shell=True, stdin=subprocess.PIPE)
+                logging.info(f"{current_time()} | FFMPEG killed successfully!")
+            except: logging.error(f"{current_time()} | FFMPEG killing ERROR")
+        try:
+            logging.info(f"{current_time()} | FFMPEG launch: {command} {cam_url} {text} {parameters}")
+            cam_proc = subprocess.Popen(f"{command} {cam_url} {text} {parameters}", shell=True, stdin=subprocess.PIPE)
+        except: logging.error(f"{current_time()} | FFMPEG launch ERROR")
 
     return [cam_proc, response]
