@@ -5,6 +5,8 @@ services:
     build: .
     image: TUBIK-corp/streetcat_restream
     container_name: streetcat_restream
+    stdin_open: true
+    tty: true
     # volumes:
     #   - ./conf.py:./:ro
     #   - ./client.json:./:ro
