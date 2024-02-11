@@ -4,5 +4,6 @@ ADD restream_youtube.py .
 ADD conf.py .
 ADD auth_youtube.py .
 ADD client.json .
-RUN pip install pytchat==0.5.5 google-api-python-client==1.7.2 
-CMD [“python”, “./restream_youtube.py”]
+ADD requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+CMD [ "python" , "./restream_youtube.py" ]
