@@ -8,6 +8,7 @@ services:
     stdin_open: true
     tty: true
     command: python ./restream_youtube.py
-    # volumes:
-    #   - ./conf.py:./:ro
-    #   - ./client.json:./:ro
+    volumes:
+      - ./conf.py:/conf.py:ro
+      - ./client.json:/client.json:ro
+      - ./viewer.log:/viewer.log
