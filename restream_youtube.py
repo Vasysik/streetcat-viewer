@@ -66,6 +66,7 @@ _thread.start_new_thread(checker, ())
 
 while True:
     try:
+        logging.info(f"{current_time()} | Chat listener launch...")
         while chat.is_alive():
             try:
                 for c in chat.get().sync_items():
