@@ -9,4 +9,3 @@ RUN apt update
 RUN apt install ffmpeg -y
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-CMD [ "python" , "./restream_youtube.py" ]
