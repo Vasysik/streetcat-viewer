@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+  streetcat_restream:
+    build: .
+    image: TUBIK-corp/streetcat_restream
+    container_name: streetcat_restream
