@@ -1,5 +1,9 @@
 import streetcat_viewer
 import conf
+import json
+
+with open('cams.json', 'r') as file:
+    streetcat_viewer.cams_json = json.loads(file.read())
 
 while(True):
     print("Cats Cams:")

@@ -5,9 +5,7 @@ import urllib.request
 import json
 import logging
 
-with open('cams.json', 'r') as file:
-    cams_json = file.read()
-cams = json.loads(cams_json)
+cams_json = None
 cam_proc = None
 
 def current_time():
@@ -22,19 +20,19 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use
     disabled = False
     
     if cam_name == "": 
-        cam_name =  random.choice(list(cams.keys()))
-        cam_number = random.randrange(1, len(cams[cam_name]) + 1)
+        cam_name =  random.choice(list(cams_json.keys()))
+        cam_number = random.randrange(1, len(cams_json[cam_name]) + 1)
         response = f"Cam {cam_name} {cam_number} is turned on"
-        cam_url = cams[cam_name][cam_number - 1]
+        cam_url = cams_json[cam_name][cam_number - 1]
         logging.info(f"{current_time()} | Rand {response} url: {cam_url}")
     else:
-        if cam_name in cams and cams[cam_name]:
-            if 1 <= cam_number <= len(cams[cam_name]):
-                cam_url = cams[cam_name][cam_number - 1]
+        if cam_name in cams_json and cams_json[cam_name]:
+            if 1 <= cam_number <= len(cams_json[cam_name]):
+                cam_url = cams_json[cam_name][cam_number - 1]
                 logging.info(f"{current_time()} | {response} url: {cam_url}")
             else:
                 disabled = True
-                response = f"Cam {len(cams[cam_name])} does not exist - invalid number"
+                response = f"Cam {len(cams_json[cam_name])} does not exist - invalid number"
                 logging.error(f"{current_time()} | {response}")
         else:
             disabled = True

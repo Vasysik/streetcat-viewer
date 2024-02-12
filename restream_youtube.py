@@ -6,8 +6,14 @@ import time
 from googleapiclient.discovery import build
 from auth_youtube import Authorize
 import logging
+import json
+
+with open('cams.json', 'r') as file:
+    streetcat_viewer.cams_json = json.loads(file.read())
 
 logging.basicConfig(filename=f"viewer.log", level=logging.INFO)
+httpx_logger = logging.getLogger("httpx")
+httpx_logger.disabled()
 
 authResponse = Authorize('client.json')
 credentials = authResponse.credentials
@@ -31,8 +37,7 @@ def getLiveChatId(LIVE_STREAM_ID):
     return liveChatId
 
 stream_id = input("Enter the live stream ID: ")
-chat = pytchat.create(video_id = stream_id, 
-                      logger = None)
+chat = pytchat.create(video_id = stream_id)
 liveChatId = getLiveChatId(stream_id)
 
 def sendReplyToLiveChat(liveChatId, message):
