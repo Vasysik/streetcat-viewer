@@ -16,13 +16,11 @@ while(True):
     print("Cam number: ", end="")
     cam_number = input()
 
-    try: 
-        player = streetcat_viewer.play(command = "ffplay", 
-                            parameters = "", 
-                            cam_name = cam_name, 
-                            cam_number = cam_number,
-                            use_text = True,
-                            fontfile = conf.fontfile)
-        player[0].wait()
-        print(player[1])
-    except: print("Player Error")
+    player = streetcat_viewer.play(command = "ffplay", 
+                        parameters = "", 
+                        cam_name = cam_name, 
+                        cam_number = int(cam_number),
+                        use_text = True,
+                        fontfile = conf.fontfile)
+    player[0].wait()
+    print(player[1])

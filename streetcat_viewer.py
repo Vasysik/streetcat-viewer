@@ -2,17 +2,12 @@ import subprocess
 import random
 import time
 import urllib.request
+import json
 import logging
 
-fresh = ["fresh", "http://streetcatpull.hellobike.com/live/4258783365322591678_0.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_1.m3u8", "http://streetcatpull.hellobike.com/live/4258783365322591678_2.m3u8"]
-despair = ["despair", "http://streetcatpull.hellobike.com/live/4412424173050749216_0.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_1.m3u8", "http://streetcatpull.hellobike.com/live/4412424173050749216_2.m3u8"]
-sleeps = ["sleeps", "http://streetcatpull.hellobike.com/live/4489918405732275808_0.m3u8", "http://streetcatpull.hellobike.com/live/4489918405732275808_1.m3u8", "http://streetcatpull.hellobike.com/live/4489918405732275808_2.m3u8"]
-snack = ["snack", "http://streetcatpull.hellobike.com/live/4291094747934800009_0.m3u8", "http://streetcatpull.hellobike.com/live/4291094747934800009_1.m3u8", "http://streetcatpull.hellobike.com/live/4291094747934800009_2.m3u8"]
-shock = ["shock", "http://streetcatpull.hellobike.com/live/4584985755015398729_0.m3u8", "http://streetcatpull.hellobike.com/live/4584985755015398729_1.m3u8", "http://streetcatpull.hellobike.com/live/4584985755015398729_2.m3u8"]
-sonic = ["sonic", "http://streetcatpull.hellobike.com/live/4303090694701059290_0.m3u8", "http://streetcatpull.hellobike.com/live/4303090694701059290_1.m3u8", "http://streetcatpull.hellobike.com/live/4303090694701059290_2.m3u8"]
-ducks = ["ducks", "http://streetcatpull.hellobike.com/live/4300845904274638881_0.m3u8", "http://streetcatpull.hellobike.com/live/4300845904274638881_1.m3u8", "http://streetcatpull.hellobike.com/live/4300845904274638881_2.m3u8"]
-
-cams = [fresh, despair, sleeps, snack, shock, sonic, ducks]
+with open('cams.json', 'r') as file:
+    cams_json = file.read()
+cams = json.loads(cams_json)
 cam_proc = None
 
 def current_time():
@@ -27,23 +22,26 @@ def play(command = "ffplay", parameters = "", cam_name = "", cam_number = 1, use
     disabled = False
     
     if cam_name == "": 
-        cam = random.choice(cams)
-        cam_name = cam[0]
-        cam_number = random.randrange(1,4)
+        cam_name =  random.choice(list(cams.keys()))
+        cam_number = random.randrange(1, len(cams[cam_name]) + 1)
         response = f"Cam {cam_name} {cam_number} is turned on"
-        cam_url = cam[cam_number]
+        cam_url = cams[cam_name][cam_number - 1]
         logging.info(f"{current_time()} | Rand {response} url: {cam_url}")
     else:
-        for cam in cams:
-            if str(cam_name) == str(cam[0]):
-                cam_url = cam[int(cam_number)]
+        if cam_name in cams and cams[cam_name]:
+            if 1 <= cam_number <= len(cams[cam_name]):
+                cam_url = cams[cam_name][cam_number - 1]
                 logging.info(f"{current_time()} | {response} url: {cam_url}")
+            else:
+                disabled = True
+                response = f"Cam {len(cams[cam_name])} does not exist - invalid number"
+                logging.error(f"{current_time()} | {response}")
+        else:
+            disabled = True
+            response = f"Cam {str(cam_name)} {str(cam_number)} does not exist - invalid name"
+            logging.error(f"{current_time()} | {response}")
 
-    if cam_url == "":
-        disabled == True
-        response = f"Cam {str(cam_name)} {str(cam_number)} does not exist"
-        logging.error(f"{current_time()} | {response}")
-    else:
+    if cam_url != "":
         try: urllib.request.urlopen(cam_url)
         except: 
             disabled = True
