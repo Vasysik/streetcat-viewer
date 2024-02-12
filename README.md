@@ -27,8 +27,9 @@
 # Functions:
 Main library functions (streetcat_viewer.py):
 1) Camera playback function:
-   ```play(command, parameters, cam_name, cam_number, use_text, fontfile)```
-
+   ```
+   play(command, parameters, cam_name, cam_number, use_text, fontfile)
+   ```
    The output is a list containing subprocess.Popen() and a response string.
 
 Currently there are 2 programs for working with cameras:
