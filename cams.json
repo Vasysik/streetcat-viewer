@@ -33,5 +33,15 @@
         "http://streetcatpull.hellobike.com/live/4300845904274638881_0.m3u8",
         "http://streetcatpull.hellobike.com/live/4300845904274638881_1.m3u8",
         "http://streetcatpull.hellobike.com/live/4300845904274638881_2.m3u8"
+    ],
+    "polite": [
+        "http://streetcatpull.hellobike.com/live/4902665556059017260_0.m3u8",
+        "http://streetcatpull.hellobike.com/live/4902665556059017260_1.m3u8",
+        "http://streetcatpull.hellobike.com/live/4902665556059017260_2.m3u8"
+    ],
+    "fall": [
+        "http://streetcatpull.hellobike.com/live/4255656354246951265_0.m3u8",
+        "http://streetcatpull.hellobike.com/live/4255656354246951265_1.m3u8",
+        "http://streetcatpull.hellobike.com/live/4255656354246951265_2.m3u8"
     ]
 }
